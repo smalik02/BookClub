@@ -34,7 +34,8 @@ Sep. 26th. 2017
 * The app will use secondary functionalities including Amazon Reviews API, Goodreads API, Twitter API, Facebook API(?), camera, Python machine learning library, Stripe, and others as needed.
 
 #### Mobile Feature Usage:
-* 
+* We might be using GPS feature later on in the development process, so that when someone is near a library or a bookstore, the app will open and give recommendations.
 
 #### Limitations:
-* 
+* Our lack of experience with machine learning with most likely limit us in getting a good training datasets and building the model for predicting new books for the users.
+* Furthermore, neither one of us has worked on a mobile app at this scale, especially the data storage aspect of it. Storing the data and building that into the app will be a good learning experience. 
