@@ -3,7 +3,7 @@
 
 Sep. 26th. 2017
 
-### Book Club
+### <center> Book Club </center>
 ### Project Proposal
 
 #### The What:
