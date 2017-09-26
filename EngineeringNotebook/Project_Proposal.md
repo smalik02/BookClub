@@ -19,14 +19,19 @@ Sep. 26th. 2017
 * We have a support from another student, not at Tufts.
 
 #### Core Functionality:
-* The app will offer book reviews focused on keywords
-* The app will allow users to search for books using genres and keywords that appear in the reviews
-* The app will get recommendation based on your preferences
+* The app will offer book reviews focused on keywords and other summary data of various works of literature.
+* The app will have two different functionalities, of which we will focus on one. (Still working on this one)
+** Users may search for books by searching for different parameters (see first point).
+** Users may elect to enter their preferences, then have books sent to them.
+* For either solution, a machine learning library will interpret user feedback and adjust their preferences.
+* (The app will allow users to search for books using genres and keywords that appear in the reviews)
+* (The app will get recommendation based on your preferences)
 * The app will allow individuals to track what their friends are reading
 
 #### Secondary Functionality:
 * The app offering a subscription based model, where they will get a certain number of book per month. The number of books can vary based on how much they read, and can contain variety of genres.
 * Creating a more robust social media aspect, such as spoiler discussions.
+* The app will use secondary functionalities including Amazon Reviews API, Goodreads API, Twitter API, Facebook API(?), camera, Python machine learning library, Stripe, and others as needed.
 
 #### Mobile Feature Usage:
 * 
