@@ -1,21 +1,21 @@
-## Daniel Westrich
-## Shehryar Malik
+### Daniel Westrich
+### Shehryar Malik
 
-## Sep. 26th. 2017
+Sep. 26th. 2017
 
-## Book Club
-## Project Proposal
+### Book Club
+### Project Proposal
 
-### The What:
+#### The What:
 * The goal of the app is to provide a social aspect to book reading
   There are lot of people that want to read, but cannot find a good book recommendation that matches their preferences.
   Thus, we think we can provide a service where people can share book recommendations, order a book, and give a review for the book.
   
-### The Whom:
+#### The Whom:
 * The target audience for the app are young & new readers.
   The app can serve any individual who is looking for new books to read. However, we think that millenials and yound readers are a very important market for our app, as many young adults are not reading as much as they want to. Since we are adding a social component to reading, we believe that we can get enough interest.
   
-### The Support:
+#### The Support:
 * We have a support from another student, not at Tufts.
 
-### Core Functionality:
+#### Core Functionality:
