@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="33037feeacd90fe639658f0be84c346b429992ea">
+        <dex dex="/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_daa46381d872aac1510be98a80e0ee539bb0235b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_a750b183e0aa3950ab1170db1e40c863fdeb7000/classes.dex" />
+    </item>
+
+</items>

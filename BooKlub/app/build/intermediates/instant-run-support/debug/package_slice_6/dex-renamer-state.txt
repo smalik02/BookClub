@@ -1,0 +1,4 @@
+#Mon Oct 09 18:05:02 EDT 2017
+base.0=/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_6
+renamed.0=classes.dex
+file.0=/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_6/classes.dex

@@ -1,0 +1,58 @@
+[
+    {
+        "merged": "/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/res/merged/debug/anim/abc_popup_exit.xml",
+        "source": "/Users/shehryarmalik/.android/build-cache/d60f08825c001158f3414389fefc123b1fb1322f/output/res/anim/abc_popup_exit.xml"
+    },
+    {
+        "merged": "/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/res/merged/debug/anim/design_fab_in.xml",
+        "source": "/Users/shehryarmalik/.android/build-cache/b5127aa0211aa44062e5e259d6b4e408821c9ed2/output/res/anim/design_fab_in.xml"
+    },
+    {
+        "merged": "/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/res/merged/debug/anim/abc_slide_out_bottom.xml",
+        "source": "/Users/shehryarmalik/.android/build-cache/d60f08825c001158f3414389fefc123b1fb1322f/output/res/anim/abc_slide_out_bottom.xml"
+    },
+    {
+        "merged": "/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/res/merged/debug/anim/abc_slide_out_top.xml",
+        "source": "/Users/shehryarmalik/.android/build-cache/d60f08825c001158f3414389fefc123b1fb1322f/output/res/anim/abc_slide_out_top.xml"
+    },
+    {
+        "merged": "/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/res/merged/debug/anim/abc_shrink_fade_out_from_bottom.xml",
+        "source": "/Users/shehryarmalik/.android/build-cache/d60f08825c001158f3414389fefc123b1fb1322f/output/res/anim/abc_shrink_fade_out_from_bottom.xml"
+    },
+    {
+        "merged": "/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/res/merged/debug/anim/abc_slide_in_top.xml",
+        "source": "/Users/shehryarmalik/.android/build-cache/d60f08825c001158f3414389fefc123b1fb1322f/output/res/anim/abc_slide_in_top.xml"
+    },
+    {
+        "merged": "/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/res/merged/debug/anim/design_snackbar_out.xml",
+        "source": "/Users/shehryarmalik/.android/build-cache/b5127aa0211aa44062e5e259d6b4e408821c9ed2/output/res/anim/design_snackbar_out.xml"
+    },
+    {
+        "merged": "/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/res/merged/debug/anim/abc_fade_out.xml",
+        "source": "/Users/shehryarmalik/.android/build-cache/d60f08825c001158f3414389fefc123b1fb1322f/output/res/anim/abc_fade_out.xml"
+    },
+    {
+        "merged": "/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/res/merged/debug/anim/abc_slide_in_bottom.xml",
+        "source": "/Users/shehryarmalik/.android/build-cache/d60f08825c001158f3414389fefc123b1fb1322f/output/res/anim/abc_slide_in_bottom.xml"
+    },
+    {
+        "merged": "/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/res/merged/debug/anim/abc_grow_fade_in_from_bottom.xml",
+        "source": "/Users/shehryarmalik/.android/build-cache/d60f08825c001158f3414389fefc123b1fb1322f/output/res/anim/abc_grow_fade_in_from_bottom.xml"
+    },
+    {
+        "merged": "/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/res/merged/debug/anim/abc_fade_in.xml",
+        "source": "/Users/shehryarmalik/.android/build-cache/d60f08825c001158f3414389fefc123b1fb1322f/output/res/anim/abc_fade_in.xml"
+    },
+    {
+        "merged": "/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/res/merged/debug/anim/design_snackbar_in.xml",
+        "source": "/Users/shehryarmalik/.android/build-cache/b5127aa0211aa44062e5e259d6b4e408821c9ed2/output/res/anim/design_snackbar_in.xml"
+    },
+    {
+        "merged": "/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/res/merged/debug/anim/abc_popup_enter.xml",
+        "source": "/Users/shehryarmalik/.android/build-cache/d60f08825c001158f3414389fefc123b1fb1322f/output/res/anim/abc_popup_enter.xml"
+    },
+    {
+        "merged": "/Users/shehryarmalik/AndroidStudioProjects/BooKlub/app/build/intermediates/res/merged/debug/anim/design_fab_out.xml",
+        "source": "/Users/shehryarmalik/.android/build-cache/b5127aa0211aa44062e5e259d6b4e408821c9ed2/output/res/anim/design_fab_out.xml"
+    }
+]
