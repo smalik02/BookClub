@@ -15,6 +15,9 @@ public class Book {
 
     // property help us to keep data
     public int book_ID;
-    public String name;
+    public String title;
+    public String author;
     public String genre;
+    public int length;
+    pubilc int release_year;
 }
