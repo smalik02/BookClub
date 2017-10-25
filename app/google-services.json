@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "804400386283",
+    "firebase_url": "https://booklub-d6019.firebaseio.com",
+    "project_id": "booklub-d6019",
+    "storage_bucket": "booklub-d6019.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804400386283:android:f894c380d2d0afe3",
+        "android_client_info": {
+          "package_name": "com.example.shehryarmalik.booklub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "804400386283-jkqh2d7tdqprdvffms7f2kc8h1d0tu02.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shehryarmalik.booklub",
+            "certificate_hash": "34197c90dcb20bd7408c51c5f7e699cf45a7405d"
+          }
+        },
+        {
+          "client_id": "804400386283-s0bdq3sp2dm6443dtqm8st4clg7nbq4a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXnXyFqlIqlVKzLrguqyyND07QmPHlyhY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "804400386283-s0bdq3sp2dm6443dtqm8st4clg7nbq4a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
