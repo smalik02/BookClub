@@ -7,7 +7,6 @@
     android:layout_gravity="center_vertical">
 
 
-
     <TextView
         android:id="@+id/book_name"
         android:textSize="20sp"
@@ -48,15 +47,6 @@
         android:focusable="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-
-    <Button
-        android:id="@+id/sign_out_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|left"
-        android:layout_weight="107.34"
-        android:text="@string/sign_out"
-        android:theme="@style/ThemeOverlay.MyDarkButton" />
 
 
 </LinearLayout>

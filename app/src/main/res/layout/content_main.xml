@@ -13,4 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="103dp"
+        android:layout_height="73dp"
+        android:layout_gravity="bottom|left"
+        android:layout_weight="107.34"
+        android:text="@string/sign_out"
+        android:theme="@style/ThemeOverlay.MyDarkButton" />
+
 </android.support.design.widget.CoordinatorLayout>

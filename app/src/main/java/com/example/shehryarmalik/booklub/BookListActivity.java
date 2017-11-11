@@ -1,18 +1,23 @@
 package com.example.shehryarmalik.booklub;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.shehryarmalik.booklub.models.Book;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.UUID;
 
@@ -20,15 +25,30 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
+import android.view.View.OnClickListener;
+
 /**
  * Created by shehryarmalik on 10/22/17.
  */
 
 public class BookListActivity extends AppCompatActivity {
     private Realm realm;
+    private FirebaseAuth mAuth;
+    private static final String TAG = "MyActivity";
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user != null) {
+            Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+        } else {
+            Log.d(TAG, "onAuthStateChanged:signed_out");
+        }
+
         Realm.init(this);
         RealmConfiguration realmConfig = new RealmConfiguration.Builder()
                 .name("books.realm")
@@ -98,6 +118,11 @@ public class BookListActivity extends AppCompatActivity {
                         })
                         .create();
                 dialog.show();
+//                int button = view.getId();
+//                if (button == R.id.sign_out_button) {
+//                    Log.v(TAG, "in sign out!!");
+//                    mAuth.signOut();
+//                }
             }
 
         });
@@ -157,6 +182,20 @@ public class BookListActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
+
+        Button signout = (Button) findViewById(R.id.button2);
+//        if (signout != null) {
+            signout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mAuth.signOut();
+                    Intent new_intent = new Intent(BookListActivity.this, MainActivity.class);
+//            new_intent.putExtra("main_activity", MainActivity.this);
+                    startActivity(new_intent);
+                }
+
+            });
+//        }
     }
 
     @Override
@@ -211,14 +250,16 @@ public class BookListActivity extends AppCompatActivity {
             }
         });
     }
-
-
-    public void onClick(View v)
-    {
-        MainActivity acitivity;
-        int i = v.getId();
-        if (i == R.id.sign_out_button) {
-            acitivity.signOut();
-        }
-    }
 }
+
+//    @Override
+//    public void onClick(View v)
+//    {
+////        Bundle extras = getIntent().getExtras();
+////        MainActivity activity = extras.getParcelable("main_activity");
+//        int i = v.getId();
+//        if (i == R.id.sign_out_button) {
+//            mAuth.signOut();
+//        }
+//    }
+//}

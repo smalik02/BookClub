@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.FloatingActionButton;
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
 
-        mAuth = FirebaseAuth.getInstance();
+//        mAuth = FirebaseAuth.getInstance();
 
 //        mAuthListener = new FirebaseAuth.AuthStateListener() {
 //            @Override
@@ -244,6 +245,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             findViewById(R.id.verify_email_button).setEnabled(!user.isEmailVerified());
             Intent new_intent = new Intent(MainActivity.this, BookListActivity.class);
+//            new_intent.putExtra("main_activity", MainActivity.this);
             startActivity(new_intent);
         } else {
             mStatusTextView.setText(R.string.signed_out);
