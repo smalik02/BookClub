@@ -1,5 +1,6 @@
 package com.example.shehryarmalik.booklub;
 
+import android.app.ActivityGroup;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +27,8 @@ import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 import android.view.View.OnClickListener;
+import android.widget.TabHost;
+import android.widget.TextView;
 
 /**
  * Created by shehryarmalik on 10/22/17.
@@ -127,8 +130,40 @@ public class BookListActivity extends AppCompatActivity {
 
         });
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+
+        TabHost tabHost = (TabHost) findViewById(R.id.tabhost);
+        tabHost.setup();
+        if (tabHost != null) {
+            TabHost.TabSpec Books = tabHost.newTabSpec("Books");
+            TabHost.TabSpec Recs = tabHost.newTabSpec("Recs");
+            TabHost.TabSpec Settings = tabHost.newTabSpec("Settings");
+
+            Books.setIndicator("Books");
+            Books.setContent(new TabHost.TabContentFactory() {
+
+                                 public View createTabContent(String tag) {
+                                     return new TextView(BookListActivity.this);
+                                 }});
+
+            Recs.setIndicator("Recs");
+            Recs.setContent(new TabHost.TabContentFactory() {
+
+                public View createTabContent(String tag) {
+                    return new TextView(BookListActivity.this);
+                }});
+
+            Settings.setIndicator("Settings");
+            Settings.setContent(new TabHost.TabContentFactory() {
+
+                public View createTabContent(String tag) {
+                    return new TextView(BookListActivity.this);
+                }});
+            tabHost.addTab(Books);
+            tabHost.addTab(Recs);
+            tabHost.addTab(Settings);
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -184,13 +219,13 @@ public class BookListActivity extends AppCompatActivity {
         });
 
         Button signout = (Button) findViewById(R.id.button2);
-//        if (signout != null) {
+//          if (signout != null) {
             signout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     mAuth.signOut();
                     Intent new_intent = new Intent(BookListActivity.this, MainActivity.class);
-//            new_intent.putExtra("main_activity", MainActivity.this);
+//                  new_intent.putExtra("main_activity", MainActivity.this);
                     startActivity(new_intent);
                 }
 
@@ -252,14 +287,3 @@ public class BookListActivity extends AppCompatActivity {
     }
 }
 
-//    @Override
-//    public void onClick(View v)
-//    {
-////        Bundle extras = getIntent().getExtras();
-////        MainActivity activity = extras.getParcelable("main_activity");
-//        int i = v.getId();
-//        if (i == R.id.sign_out_button) {
-//            mAuth.signOut();
-//        }
-//    }
-//}
