@@ -20,6 +20,6 @@
         android:layout_gravity="bottom|left"
         android:layout_weight="107.34"
         android:text="@string/sign_out"
-        android:theme="@style/ThemeOverlay.MyDarkButton" />
+        android:theme="@style/AppTheme" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.example.shehryarmalik.booklub.models.Book;
@@ -19,6 +18,7 @@ import io.realm.RealmBaseAdapter;
 public class BookAdapter extends RealmBaseAdapter<Book> implements android.widget.ListAdapter{
 
     private BookListActivity activity;
+    private BookListActivity.MyBooks activity2;
 
     private static class ViewHolder {
         TextView bookName;
@@ -29,9 +29,9 @@ public class BookAdapter extends RealmBaseAdapter<Book> implements android.widge
         CheckBox isRead;
     }
 
-    BookAdapter(BookListActivity activity, OrderedRealmCollection<Book> data) {
+    BookAdapter(BookListActivity.MyBooks activity, OrderedRealmCollection<Book> data) {
         super(data);
-        this.activity = activity;
+        this.activity2 = activity;
     }
 
     @Override
@@ -74,7 +74,7 @@ public class BookAdapter extends RealmBaseAdapter<Book> implements android.widge
             int position = (Integer) view.getTag();
             if (adapterData != null) {
                 Book book = adapterData.get(position);
-                activity.changeBookRead(book.getId());
+                activity2.changeBookRead(book.getId());
             }
         }
     };

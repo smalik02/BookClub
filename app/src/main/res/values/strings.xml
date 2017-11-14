@@ -78,5 +78,6 @@
     <string name="id_fmt">User ID: %s</string>
     <string name="email_fmt">Email: %s</string>
     <string name="title_activity_main2">BookListActivity</string>
+    <string name="title_activity_book_recs">BookRecs</string>
 </resources>
 
