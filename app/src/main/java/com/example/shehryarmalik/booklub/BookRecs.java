@@ -1,7 +1,10 @@
 package com.example.shehryarmalik.booklub;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.Signature;
+import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,7 +14,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,11 +30,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.shehryarmalik.booklub.models.Book;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -60,7 +69,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import static com.example.shehryarmalik.booklub.BookListActivity.getRealm;
 
 
-public class BookRecs extends Fragment {
+public class BookRecs extends Fragment{
 
 
     private static final String TAG = "MyActivity";
@@ -88,9 +97,6 @@ public class BookRecs extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_book_recs, container,
                 false);
 
-        WebView myWebView = (WebView) rootView.findViewById(R.id.webView);
-        myWebView.getSettings().setJavaScriptEnabled(true);
-        myWebView.getSettings().setDomStorageEnabled(true);
 
         //final TextView mTextView = (TextView) rootView.findViewById(R.id.editText);
 
@@ -177,8 +183,57 @@ public class BookRecs extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             WebView myWebView = (WebView) getView().findViewById(R.id.webView);
+            myWebView.setWebViewClient(new WebViewClient() {
+                @Override
+                public void onReceivedSslError(final WebView view, final SslErrorHandler handler, SslError error) {
+                    Log.d("CHECK", "onReceivedSslError");
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity().getApplicationContext());
+                    AlertDialog alertDialog = builder.create();
+                    String message = "Certificate error.";
+                    switch (error.getPrimaryError()) {
+                        case SslError.SSL_UNTRUSTED:
+                            message = "The certificate authority is not trusted.";
+                            break;
+                        case SslError.SSL_EXPIRED:
+                            message = "The certificate has expired.";
+                            break;
+                        case SslError.SSL_IDMISMATCH:
+                            message = "The certificate Hostname mismatch.";
+                            break;
+                        case SslError.SSL_NOTYETVALID:
+                            message = "The certificate is not yet valid.";
+                            break;
+                    }
+                    message += " Do you want to continue anyway?";
+                    alertDialog.setTitle("SSL Certificate Error");
+                    alertDialog.setMessage(message);
+                    alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.d("CHECK", "Button ok pressed");
+                            // Ignore SSL certificate errors
+                            handler.proceed();
+                        }
+                    });
+                    alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.d("CHECK", "Button cancel pressed");
+                            handler.cancel();
+                        }
+                    });
+                    alertDialog.show();
+                }
+            });
+            String urlStr   = "http://example.com/my.jpg";
+            String mimeType = "text/html";
+            String encoding = null;
+
             myWebView.getSettings().setJavaScriptEnabled(true);
             myWebView.getSettings().setDomStorageEnabled(true);
+            myWebView.getSettings().setLoadsImagesAutomatically(true);
+            WebSettings myWebViewSettings = myWebView.getSettings();
+            myWebViewSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
             String content =
                     "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"+
                             "<html><head>"+
@@ -187,9 +242,11 @@ public class BookRecs extends Fragment {
 
             content += result + "</body></html>";
 
-            myWebView.loadData(content, "text/html", null);
-            //myWebView.loadUrl("https://www.google.com");
+            myWebView.loadDataWithBaseURL(urlStr, content, mimeType, encoding, urlStr);
+            //myWebView.loadData(content, "text/html", null);
+            //myWebView.loadUrl("https://images-na.ssl-images-amazon.com/images/I/51YSdHMXnmL._SL75_.jpg");
         }
+
     }
 
     private String loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
@@ -197,7 +254,7 @@ public class BookRecs extends Fragment {
         ResponseParser responseXmlParser = new ResponseParser();
         List<ResponseParser.Entry> entries = null;
         //String url = null;
-        StringBuilder htmlString = new StringBuilder();
+        //StringBuilder htmlString = new StringBuilder();
         String htmlToOutput;
         try {
             stream = downloadUrl(urlString);
@@ -219,7 +276,7 @@ public class BookRecs extends Fragment {
         paramsToSign.put("AssociateTag", "booklub-20");
         paramsToSign.put("Operation", "SimilarityLookup");
         paramsToSign.put("SearchIndex", "Books");
-        paramsToSign.put("ResponseGroup", "Small");
+        paramsToSign.put("ResponseGroup", "Small,Images");
         paramsToSign.put("ItemId", entries.get(0).ASIN);
         paramsToSign.put("Service", "AWSECommerceService");
         paramsToSign.put("Version", "2010-11-01");
@@ -233,9 +290,11 @@ public class BookRecs extends Fragment {
         List<ResponseParser.Entry> entries_similarities = null;
 
         StringBuilder htmlString = new StringBuilder();
+        //String imageHTML = null;
         try {
             stream = downloadUrl(strSignature);
             entries_similarities = responseXmlParser.parse(stream, "SimilarityLookupResponse");
+            //imageHTML = lookUpImages(entries_similarities);
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -250,7 +309,95 @@ public class BookRecs extends Fragment {
             }
         }
 
+        byte[] imageRaw = null;
+        try {
+            URL url = new URL(entries_similarities.get(0).url);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+            int c;
+            while ((c = in.read()) != -1) {
+                out.write(c);
+            }
+            out.flush();
+
+            imageRaw = out.toByteArray();
+
+            urlConnection.disconnect();
+            in.close();
+            out.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        String image64 = Base64.encodeToString(imageRaw, Base64.DEFAULT);
+
+        String pageData = "<img src=\"data:image/jpeg;base64," + image64 + "\" />";
+
         for (ResponseParser.Entry entry : entries_similarities) {
+            URL imageURL = null;
+            try {
+                imageURL = new URL(entry.url);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            htmlString.append("<p> Title: ");
+            htmlString.append(entry.title);
+            htmlString.append("</p>");
+            htmlString.append("<p> ASIN: ");
+            htmlString.append(entry.ASIN);
+            htmlString.append("</p>");
+            htmlString.append(pageData);
+            Log.e(TAG, entry.url);
+        }
+
+        return htmlString.toString();
+
+    }
+
+    private String lookUpImages(List<ResponseParser.Entry> entries_similarities) {
+
+        paramsToSign = new HashMap<String, String>();
+
+        paramsToSign.put("AssociateTag", "booklub-20");
+        paramsToSign.put("Operation", "ItemLookup");
+        paramsToSign.put("SearchIndex", "Books");
+        paramsToSign.put("ResponseGroup", "Images");
+        paramsToSign.put("IdType", "ASIN");
+        paramsToSign.put("ItemId", entries_similarities.get(0).ASIN);
+        paramsToSign.put("Service", "AWSECommerceService");
+        paramsToSign.put("Version", "2010-11-01");
+
+        SignedRequestHelper signature = new SignedRequestHelper();
+        String strSignature = signature.sign(paramsToSign);
+
+        InputStream stream = null;
+        ResponseParser responseXmlParser = new ResponseParser();
+        List<ResponseParser.Entry> images_similar = null;
+
+        StringBuilder htmlString = new StringBuilder();
+        try {
+            stream = downloadUrl(strSignature);
+            images_similar = responseXmlParser.parse(stream, "ItemLookupResponse");
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        for (ResponseParser.Entry entry : images_similar) {
+            htmlString.append(" <p>" + entry.url + "</p>");
             htmlString.append(" <p> Title: ");
             htmlString.append(entry.title);
             htmlString.append("</p>" + "<p> ASIN:"+ entry.ASIN + "</p>");

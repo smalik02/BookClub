@@ -37,7 +37,6 @@ public class ResponseParser {
             }
             String name = parser.getName();
             if (name.equals("Items")) {
-                Log.e(TAG, "Item Found");
                 entries.add(readEntry(parser));
             } else {
                 skip(parser);
@@ -49,11 +48,13 @@ public class ResponseParser {
         public final String title;
         public final String author;
         public final String ASIN;
+        public final String url;
 
-        private Entry(String title, String author, String asin) {
+        private Entry(String title, String author, String asin, String url) {
             this.title = title;
             this.author = author;
             this.ASIN = asin;
+            this.url = url;
         }
     }
     private Entry readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
@@ -61,6 +62,7 @@ public class ResponseParser {
         String title = null;
         String author = null;
         String asin = null;
+        String url = null;
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -91,6 +93,20 @@ public class ResponseParser {
                         }
                     } else if (name2.equals("ASIN")) {
                         asin = readText(parser);
+                    } else if (name2.equals("SmallImage")){
+                        Log.e(TAG, "SMALL IMAGE FOUND");
+                        parser.require(XmlPullParser.START_TAG, ns, "SmallImage");
+                        while (parser.next() != XmlPullParser.END_TAG) {
+                            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                                continue;
+                            }
+                            String name3 = parser.getName();
+                            if (name3.equals("URL")) {
+                                url = readLink(parser);
+                            } else {
+                                skip(parser);
+                            }
+                        }
                     } else {
                         skip(parser);
                     }
@@ -98,10 +114,10 @@ public class ResponseParser {
             } else {
                 skip(parser);
             }
-
         }
-        return new Entry(title, author, asin);
+        return new Entry(title, author, asin, url);
     }
+
     private String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, "Title");
         String title = readText(parser);
@@ -119,20 +135,20 @@ public class ResponseParser {
     }
     private String readLink(XmlPullParser parser) throws IOException, XmlPullParserException {
         String link = "";
-        parser.require(XmlPullParser.START_TAG, ns, "link");
-        String tag = parser.getName();
-        if (tag.equals("link")) {
-            link = parser.getAttributeValue(null, "url");
-            parser.nextTag();
-        }
-        parser.require(XmlPullParser.END_TAG, ns, "link");
+        parser.require(XmlPullParser.START_TAG, ns, "URL");
+        link = readText(parser);
+//        String tag = parser.getName();
+//        if (tag.equals("URL")) {
+//            link = parser.getText();
+//            parser.nextTag();
+//        }
+        parser.require(XmlPullParser.END_TAG, ns, "URL");
         return link;
     }
     private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
         String result = "";
         if (parser.next() == XmlPullParser.TEXT) {
             result = parser.getText();
-            Log.e(TAG, result);
             parser.nextTag();
         }
         return result;
