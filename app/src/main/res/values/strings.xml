@@ -79,5 +79,18 @@
     <string name="email_fmt">Email: %s</string>
     <string name="title_activity_main2">BookListActivity</string>
     <string name="title_activity_book_recs">BookRecs</string>
+    <string name="action_add_favourite">Add to Favourites</string>
+
+    <string name="vertical_ellipsis">&#8942;</string>
+
+    <string name="Title"> Title: %1$s</string>
+    <string name="Author"> Author: %1$s</string>
+    <string name="Genre"> Genre: %1$s</string>
+    <string name="Year"> Year: %1$d</string>
+    <string name="Length"> Pages: %1$d</string>
+
+    <string name="connection_error">Unable to load content. Check your network connection.</string>
+    <string name="xml_error">Error parsing XML.</string>
+
 </resources>
 

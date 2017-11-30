@@ -3,38 +3,43 @@ package com.example.shehryarmalik.booklub;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.example.shehryarmalik.booklub.models.Book;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
-
-import android.view.View.OnClickListener;
 
 /**
  * Created by shehryarmalik on 10/22/17.
@@ -45,6 +50,7 @@ public class BookListActivity extends AppCompatActivity{
     private FirebaseAuth mAuth;
     private static final String TAG = "MyActivity";
     private static final String REALM_TAG = "__REALM__";
+    private static final String BACK_STACK_ROOT_TAG = "root_fragment";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +103,6 @@ public class BookListActivity extends AppCompatActivity{
 
             }
         });
-//        }
     }
 
     @Override
@@ -166,9 +171,14 @@ public class BookListActivity extends AppCompatActivity{
      * Created by shehryarmalik on 11/13/17.
      */
 
-    public static class MyBooks extends Fragment {
+    public static class MyBooks extends Fragment{
         private Realm realm;
         private FirebaseAuth mAuth;
+
+        private RecyclerView recyclerView;
+        private BookAdapter adapter;
+        private ArrayList<Book> bookList;
+
         @Override
         public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.activity_main, container,
@@ -179,51 +189,52 @@ public class BookListActivity extends AppCompatActivity{
             FirebaseUser user = mAuth.getCurrentUser();
 
             RealmResults<Book> book = realm.where(Book.class).findAll();
-            final BookAdapter adapter = new BookAdapter(MyBooks.this, book);
 
-            ListView listView = (ListView) rootView.findViewById(R.id.book_list);
-            listView.setAdapter(adapter);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            initCollapsingToolbar();
+
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+
+            bookList = new ArrayList<>(book);
+            adapter = new BookAdapter(this, bookList, new CustomItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    final Book book = (Book) adapterView.getAdapter().getItem(i);
-
-                    LinearLayout layout = new LinearLayout(getActivity().getApplicationContext());
+                public void onItemClick(View v, final int position) {
+//                    String bookId = bookList.get(position).getId();
+                    LinearLayout layout = new LinearLayout(v.getContext());
                     layout.setOrientation(LinearLayout.VERTICAL);
 
-                    final EditText titleBox = new EditText(getActivity().getApplicationContext());
-                    titleBox.setText(book.getName());
+                    final EditText titleBox = new EditText(v.getContext());
+                    titleBox.setText(bookList.get(position).getName());
                     titleBox.setHint("Title");
                     layout.addView(titleBox);
 
-                    final EditText authorBox = new EditText(getActivity().getApplicationContext());
-                    authorBox.setText(book.getAuthor());
+                    final EditText authorBox = new EditText(v.getContext());
+                    authorBox.setText(bookList.get(position).getAuthor());
                     authorBox.setHint("Author");
                     layout.addView(authorBox);
 
-                    final EditText genreBox = new EditText(getActivity().getApplicationContext());
-                    genreBox.setText(book.getGenre());
+                    final EditText genreBox = new EditText(v.getContext());
+                    genreBox.setText(bookList.get(position).getGenre());
                     genreBox.setHint("Genre");
                     layout.addView(genreBox);
 
-                    final EditText releaseBox = new EditText(getActivity().getApplicationContext());
-                    releaseBox.setText(String.valueOf(book.getRelease_year()));
+                    final EditText releaseBox = new EditText(v.getContext());
+                    releaseBox.setText(String.valueOf(bookList.get(position).getRelease_year()));
                     releaseBox.setHint("Release Year");
                     layout.addView(releaseBox);
 
-                    final EditText lengthBox = new EditText(getActivity().getApplicationContext());
-                    lengthBox.setText(String.valueOf(book.getLength()));
+                    final EditText lengthBox = new EditText(v.getContext());
+                    lengthBox.setText(String.valueOf(bookList.get(position).getLength()));
                     lengthBox.setHint("Length");
                     layout.addView(lengthBox);
 
-                    final EditText bookEditText = new EditText(getActivity().getApplicationContext());
-                    AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity() ,R.style.AlertDialogCustom) )
+                    final EditText bookEditText = new EditText(v.getContext());
+                    AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(v.getContext(), R.style.AlertDialogCustom))
                             .setTitle("Edit Book")
                             .setView(layout)
                             .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    changeTaskName(book.getId(), String.valueOf(titleBox.getText()),
+                                    changeTaskName(bookList.get(position).getId(), String.valueOf(titleBox.getText()),
                                             String.valueOf(authorBox.getText()), String.valueOf(genreBox.getText()),
                                             Integer.parseInt(releaseBox.getText().toString()),
                                             Integer.parseInt(lengthBox.getText().toString()));
@@ -233,14 +244,20 @@ public class BookListActivity extends AppCompatActivity{
                             .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    deleteTask(book.getId());
+                                    deleteTask(bookList.get(position).getId());
                                 }
                             })
                             .create();
                     dialog.show();
                 }
-
             });
+
+            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
+            recyclerView.setLayoutManager(mLayoutManager);
+            recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setAdapter(adapter);
+
             FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
             fab.setOnClickListener(new OnClickListener() {
                 @Override
@@ -309,11 +326,22 @@ public class BookListActivity extends AppCompatActivity{
             return rootView;
         }
 
+
+
+        /**
+         * Converting dp to pixel
+         */
+        private int dpToPx(int dp) {
+            Resources r = getResources();
+            return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+        }
+
     //    public void onViewCreated(View v, Bundle savedInstanceState) {
     //        super.onViewCreated(v, savedInstanceState);
     //
     //
     //    }
+
 
         @Override
         public void onStart()
@@ -322,7 +350,7 @@ public class BookListActivity extends AppCompatActivity{
         }
 
 
-        private void changeTaskName(final String taskId, final String title, final String author,
+        public void changeTaskName(final String taskId, final String title, final String author,
                                    final String genre, final int release_year, final int length) {
             realm.executeTransactionAsync(new Realm.Transaction() {
                 @Override
@@ -349,7 +377,7 @@ public class BookListActivity extends AppCompatActivity{
         }
 
 
-        private void deleteTask(final String taskId) {
+        public void deleteTask(final String taskId) {
             realm.executeTransactionAsync(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
@@ -362,6 +390,45 @@ public class BookListActivity extends AppCompatActivity{
 
 
     }
+
+    /**
+     * RecyclerView item decoration - give equal margin around grid item
+     */
+    public static class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spanCount;
+        private int spacing;
+        private boolean includeEdge;
+
+        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+            this.spanCount = spanCount;
+            this.spacing = spacing;
+            this.includeEdge = includeEdge;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view); // item position
+            int column = position % spanCount; // item column
+
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
+            }
+        }
+    }
+
 }
 
 
@@ -420,3 +487,36 @@ public class BookListActivity extends AppCompatActivity{
 //            }
 //        });
 //
+
+
+/**
+ * Initializing collapsing toolbar
+ * Will show and hide the toolbar title on scroll
+ */
+//        private void initCollapsingToolbar() {
+//            final CollapsingToolbarLayout collapsingToolbar =
+//                    (CollapsingToolbarLayout) getView().findViewById(R.id.collapsing_toolbar);
+//            collapsingToolbar.setTitle(" ");
+//            AppBarLayout appBarLayout = (AppBarLayout) getView().findViewById(R.id.appbar);
+//            appBarLayout.setExpanded(true);
+//
+//            // hiding & showing the title when toolbar expanded & collapsed
+//            appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+//                boolean isShow = false;
+//                int scrollRange = -1;
+//
+//                @Override
+//                public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+//                    if (scrollRange == -1) {
+//                        scrollRange = appBarLayout.getTotalScrollRange();
+//                    }
+//                    if (scrollRange + verticalOffset == 0) {
+//                        collapsingToolbar.setTitle(getString(R.string.app_name));
+//                        isShow = true;
+//                    } else if (isShow) {
+//                        collapsingToolbar.setTitle(" ");
+//                        isShow = false;
+//                    }
+//                }
+//            });
+//        }

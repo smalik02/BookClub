@@ -1,59 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="10dp">
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:padding="10dp">-->
 
 
-        <TextView
-            android:id="@+id/book_name"
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="100"
-            android:textSize="20sp" />
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/card_margin"
+            android:elevation="3dp"
+            card_view:cardCornerRadius="@dimen/card_album_radius">
 
-        <TextView
-            android:id="@+id/author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="100"
-            android:textSize="20sp" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/genre"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="100"
-            android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/book_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/album_title_padding"
+                    android:paddingRight="@dimen/album_title_padding"
+                    android:paddingTop="@dimen/album_title_padding"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorPrimaryDark"/>
 
-        <TextView
-            android:id="@+id/release_year"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="100"
-            android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/author"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/album_title_padding"
+                    android:paddingRight="@dimen/album_title_padding"
+                    android:paddingTop="@dimen/album_title_padding"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorPrimaryDark"/>
 
-        <TextView
-            android:id="@+id/length"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="100"
-            android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/genre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/album_title_padding"
+                    android:paddingRight="@dimen/album_title_padding"
+                    android:paddingTop="@dimen/album_title_padding"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorPrimaryDark"/>
 
-        <CheckBox
-            android:id="@+id/is_read"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:focusable="false" />
+                <TextView
+                    android:id="@+id/release_year"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/album_title_padding"
+                    android:paddingRight="@dimen/album_title_padding"
+                    android:paddingTop="@dimen/album_title_padding"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorPrimaryDark"/>
 
+                <TextView
+                    android:id="@+id/length"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/album_title_padding"
+                    android:paddingRight="@dimen/album_title_padding"
+                    android:paddingTop="@dimen/album_title_padding"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorPrimaryDark"/>
 
-    </LinearLayout>
+                <CheckBox
+                    android:id="@+id/is_read"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:paddingLeft="@dimen/album_title_padding"
+                    android:paddingRight="@dimen/album_title_padding"
+                    android:paddingTop="@dimen/album_title_padding"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:backgroundTint="@color/colorAccent"/>
 
-</android.support.design.widget.CoordinatorLayout>
+                <!--<ImageView-->
+                    <!--android:id="@+id/overflow"-->
+                    <!--android:layout_width="@dimen/ic_album_overflow_width"-->
+                    <!--android:layout_height="@dimen/ic_album_overflow_height"-->
+                    <!--android:layout_alignBottom="@+id/book_name"-->
+                    <!--android:layout_alignParentEnd="true"-->
+                    <!--android:scaleType="centerCrop"-->
+                    <!--app:srcCompat="@string/vertical_ellipsis" />-->
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+</LinearLayout>

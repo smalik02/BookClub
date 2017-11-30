@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.shehryarmalik.booklub.MainActivity"
+    tools:showIn="@layout/activity_main"
+    tools:ignore="ExtraText">
+
     tools:showIn="@layout/activity_main">
 
     <!--<android.support.v7.widget.RecyclerView-->
@@ -13,18 +16,23 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent" />-->
 
-    <ListView
-        android:id="@+id/book_list"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:scrollbars="vertical"
+        android:layout_alignStart="@+id/button2"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="103dp"
-        android:layout_height="73dp"
-        android:layout_gravity="bottom|left"
-        android:layout_weight="107.34"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
         android:text="@string/sign_out"
-        android:theme="@style/AppTheme" />
-
-</android.support.design.widget.CoordinatorLayout>
+        android:theme="@style/AppTheme"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+</RelativeLayout>
