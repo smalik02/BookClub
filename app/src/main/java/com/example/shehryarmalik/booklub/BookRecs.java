@@ -147,7 +147,6 @@ public class BookRecs extends Fragment{
             myWebView.setWebViewClient(new WebViewClient() {
                 @Override
                 public void onReceivedSslError(final WebView view, final SslErrorHandler handler, SslError error) {
-                    Log.d("CHECK", "onReceivedSslError");
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity().getApplicationContext());
                     AlertDialog alertDialog = builder.create();
                     String message = "Certificate error.";
