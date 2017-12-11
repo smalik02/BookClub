@@ -68,37 +68,18 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import static com.example.shehryarmalik.booklub.BookListActivity.getRealm;
 
-
 public class BookRecs extends Fragment{
 
 
     private static final String TAG = "MyActivity";
-
-    /*
-     * Your Access Key ID, as taken from the Your Account page.
-     */
-    private static final String ACCESS_KEY_ID = "AKIAJAD3UFO4LVUT3WNQ";
-
-    /*
-     * Your Secret Key corresponding to the above ID, as taken from the
-     * Your Account page.
-     */
-    private static final String SECRET_KEY = "AsA7XmFZFLyVQbXhx/prSFkp5cgr9fdKQxIXuX36";
-
-    private static final String ENDPOINT = "webservices.amazon.com";
-
     private Map<String, String> paramsToSign;
-
+    private static boolean fullHTLML = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        
 
         View rootView = inflater.inflate(R.layout.activity_book_recs, container,
                 false);
-
-
-        //final TextView mTextView = (TextView) rootView.findViewById(R.id.editText);
 
         return rootView;
     }
@@ -123,45 +104,25 @@ public class BookRecs extends Fragment{
         SignedRequestHelper signature = new SignedRequestHelper();
 
         final ArrayList<String> xmlResponses = new ArrayList<>(books.size());
+//        for (int index = 0; index < books.size(); index++) {
 
-            String book_name = books.get(0).getName();
-            //final int index_copy = index;
+//            if (index < 1) {
+//                fullHTLML = true;
+//            }
+            if (books.size() != 0) {
+                String book_name = books.get(0).getName();
+                //final int index_copy = index;
 
-            paramsToSign.put("Keywords", book_name);
-            String strSignature = signature.sign(paramsToSign);
+                paramsToSign.put("Keywords", book_name);
+                String strSignature = signature.sign(paramsToSign);
 
-            loadPage(strSignature);
+                loadPage(strSignature);
 
-            String service = "AWSECommerceService";
+                String service = "AWSECommerceService";
 
-            String region = "us-east-1";
-
-            // Instantiate the RequestQueue.
-            //RequestQueue queue = Volley.newRequestQueue(getContext());
-            //String url = "http://webservices.amazon.com/onca/xml?AWSAccessKeyId=AKIAJAD3UFO4LVUT3WNQ&AssociateTag=booklub-20&Keywords=harry_potter&Operation=ItemSearch&ResponseGroup=Small&SearchIndex=All&Service=AWSECommerceService&Timestamp="+nowAsISO+"&Signature="+s_key;
-            //String url ="http://webservices.amazon.com/onca/xml?Service=AWSECommerceService&Operation=ItemSearch&ResponseGroup=Small&SearchIndex=All&Keywords=harry_potter&AWSAccessKeyId="+ACCESS_KEY_ID+"&AssociateTag="+
-            //        "booklub-20&Timestamp="+nowAsISO+"&Signature="+s_key;
-
-            // Request a string response from the provided URL.
-//            StringRequest stringRequest = new StringRequest(Request.Method.GET, strSignature,
-//                    new Response.Listener<String>() {
-//                        @Override
-//                        public void onResponse(String response) {
-//                            xmlResponses.add(index_copy, response);
-//                            // Display the first 500 characters of the response string.
-//                             mTextView.setText("Response is: "+ response);
-//                            Log.e(TAG, response);
-//                        }
-//                    }, new Response.ErrorListener() {
-//                @Override
-//                public void onErrorResponse(VolleyError error) {
-//                    mTextView.setText("That didn't work!");
-//                }
-//            });
-            // Add the request to the RequestQueue.
-            //queue.add(stringRequest);
-            //parse_response(xmlResponses);
-
+                String region = "us-east-1";
+            }
+//        }
     }
 
     private void loadPage(String urls) {
@@ -232,13 +193,16 @@ public class BookRecs extends Fragment{
             myWebView.getSettings().setJavaScriptEnabled(true);
             myWebView.getSettings().setDomStorageEnabled(true);
             myWebView.getSettings().setLoadsImagesAutomatically(true);
+            myWebView.getSettings().setBuiltInZoomControls(true);
             WebSettings myWebViewSettings = myWebView.getSettings();
             myWebViewSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
             String content =
                     "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"+
                             "<html><head>"+
                             "<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />"+
-                            "<head> HOW ABOUT THAT </head> <body>";
+                            "<head><strong> Book Recommendations </strong> </head> <body>";
+
+            Log.e(TAG, result);
 
             content += result + "</body></html>";
 
@@ -309,48 +273,44 @@ public class BookRecs extends Fragment{
             }
         }
 
-        byte[] imageRaw = null;
-        try {
-            URL url = new URL(entries_similarities.get(0).url);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-            int c;
-            while ((c = in.read()) != -1) {
-                out.write(c);
-            }
-            out.flush();
-
-            imageRaw = out.toByteArray();
-
-            urlConnection.disconnect();
-            in.close();
-            out.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        String image64 = Base64.encodeToString(imageRaw, Base64.DEFAULT);
-
-        String pageData = "<img src=\"data:image/jpeg;base64," + image64 + "\" />";
-
+        Log.e(TAG, String.valueOf(entries_similarities.size()));
         for (ResponseParser.Entry entry : entries_similarities) {
-            URL imageURL = null;
+            byte[] imageRaw = null;
             try {
-                imageURL = new URL(entry.url);
-            } catch (MalformedURLException e) {
+                URL url = new URL(entry.url);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+                int c;
+                while ((c = in.read()) != -1) {
+                    out.write(c);
+                }
+                out.flush();
+
+                imageRaw = out.toByteArray();
+
+                urlConnection.disconnect();
+                in.close();
+                out.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            htmlString.append("<p> Title: ");
-            htmlString.append(entry.title);
-            htmlString.append("</p>");
-            htmlString.append("<p> ASIN: ");
-            htmlString.append(entry.ASIN);
-            htmlString.append("</p>");
+
+            String image64 = Base64.encodeToString(imageRaw, Base64.DEFAULT);
+
+            String pageData = "<figure><img src=\"data:image/jpeg;base64," + image64 + "\" width=\"300\" height=\"300\" />";
+
+
             htmlString.append(pageData);
+            htmlString.append("<figcaption> <strong> Title: </strong>");
+            htmlString.append(entry.title);
+            htmlString.append("<strong> ASIN: </strong>");
+            htmlString.append(entry.ASIN);
+            htmlString.append("</figcaption>");
+            htmlString.append("</figure>");
             Log.e(TAG, entry.url);
         }
 

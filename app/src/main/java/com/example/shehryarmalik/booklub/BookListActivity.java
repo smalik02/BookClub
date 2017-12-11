@@ -6,17 +6,22 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout_;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
@@ -31,15 +36,21 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.example.shehryarmalik.booklub.models.Book;
+import com.google.android.gms.common.api.Api;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+
+import com.example.shehryarmalik.booklub.BooksAPI;
+
 
 /**
  * Created by shehryarmalik on 10/22/17.
@@ -121,7 +132,7 @@ public class BookListActivity extends AppCompatActivity{
 
     public static Realm getRealm(Context context) {
         // noinspection ResourceType
-        return (Realm)context.getSystemService(REALM_TAG);
+        return Realm.getDefaultInstance();
     }
 
     @Override
@@ -162,26 +173,26 @@ public class BookListActivity extends AppCompatActivity{
         });
     }
 
-//    @Override
-//    public void onTabChanged(String tabId) {
-//        Toast.makeText(getApplicationContext(), tabId, Toast.LENGTH_SHORT).show();
-//    }
 
     /**
      * Created by shehryarmalik on 11/13/17.
      */
 
-    public static class MyBooks extends Fragment{
+    public static class MyBooks extends Fragment implements RealmChangeListener {
         private Realm realm;
         private FirebaseAuth mAuth;
 
         private RecyclerView recyclerView;
         private BookAdapter adapter;
         private ArrayList<Book> bookList;
+        private static final int ANIMATION_DURATION = 500;
+
+        LinearLayoutManager layoutManager;
+        SwipeRefreshLayout_ swipeRefreshLayout;
 
         @Override
         public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.activity_main, container,
+            final View rootView = inflater.inflate(R.layout.activity_main, container,
                     false);
             realm = getRealm(getActivity());
 
@@ -194,47 +205,61 @@ public class BookListActivity extends AppCompatActivity{
 
             recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
-            bookList = new ArrayList<>(book);
-            adapter = new BookAdapter(this, bookList, new CustomItemClickListener() {
+//            swipeRefreshLayout = (SwipeRefreshLayout_) rootView.findViewById(R.id.swipeRefreshLayout);
+//            swipeRefreshLayout.setColorSchemeResources(R.color.realm_red, R.color.realm_blue);
+
+//          bookList = new RealmResults<book>;
+
+            layoutManager = new LinearLayoutManager(recyclerView.getContext());
+            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
+            recyclerView.setLayoutManager(mLayoutManager);
+            recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+            RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+            itemAnimator.setAddDuration(ANIMATION_DURATION);
+            itemAnimator.setRemoveDuration(ANIMATION_DURATION);
+            recyclerView.setItemAnimator(itemAnimator);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+            adapter = new BookAdapter(getContext(), this, book, new CustomItemClickListener() {
                 @Override
-                public void onItemClick(View v, final int position) {
+                public void onItemClick(final Book book) {
 //                    String bookId = bookList.get(position).getId();
-                    LinearLayout layout = new LinearLayout(v.getContext());
+                    LinearLayout layout = new LinearLayout(rootView.getContext());
                     layout.setOrientation(LinearLayout.VERTICAL);
 
-                    final EditText titleBox = new EditText(v.getContext());
-                    titleBox.setText(bookList.get(position).getName());
+                    final EditText titleBox = new EditText(rootView.getContext());
+                    titleBox.setText(book.getName());
                     titleBox.setHint("Title");
                     layout.addView(titleBox);
 
-                    final EditText authorBox = new EditText(v.getContext());
-                    authorBox.setText(bookList.get(position).getAuthor());
+                    final EditText authorBox = new EditText(rootView.getContext());
+                    authorBox.setText(book.getAuthor());
                     authorBox.setHint("Author");
                     layout.addView(authorBox);
 
-                    final EditText genreBox = new EditText(v.getContext());
-                    genreBox.setText(bookList.get(position).getGenre());
+                    final EditText genreBox = new EditText(rootView.getContext());
+                    genreBox.setText(book.getGenre());
                     genreBox.setHint("Genre");
                     layout.addView(genreBox);
 
-                    final EditText releaseBox = new EditText(v.getContext());
-                    releaseBox.setText(String.valueOf(bookList.get(position).getRelease_year()));
+                    final EditText releaseBox = new EditText(rootView.getContext());
+                    releaseBox.setText(String.valueOf(book.getRelease_year()));
                     releaseBox.setHint("Release Year");
                     layout.addView(releaseBox);
 
-                    final EditText lengthBox = new EditText(v.getContext());
-                    lengthBox.setText(String.valueOf(bookList.get(position).getLength()));
+                    final EditText lengthBox = new EditText(rootView.getContext());
+                    lengthBox.setText(String.valueOf(book.getLength()));
                     lengthBox.setHint("Length");
                     layout.addView(lengthBox);
 
-                    final EditText bookEditText = new EditText(v.getContext());
-                    AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(v.getContext(), R.style.AlertDialogCustom))
+                    final EditText bookEditText = new EditText(rootView.getContext());
+                    AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(rootView.getContext(), R.style.AlertDialogCustom))
                             .setTitle("Edit Book")
                             .setView(layout)
                             .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    changeTaskName(bookList.get(position).getId(), String.valueOf(titleBox.getText()),
+                                    changeTaskName(book.getId(), String.valueOf(titleBox.getText()),
                                             String.valueOf(authorBox.getText()), String.valueOf(genreBox.getText()),
                                             Integer.parseInt(releaseBox.getText().toString()),
                                             Integer.parseInt(lengthBox.getText().toString()));
@@ -244,7 +269,7 @@ public class BookListActivity extends AppCompatActivity{
                             .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    deleteTask(bookList.get(position).getId());
+                                    deleteTask(book.getId());
                                 }
                             })
                             .create();
@@ -252,11 +277,10 @@ public class BookListActivity extends AppCompatActivity{
                 }
             });
 
-            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
-            recyclerView.setLayoutManager(mLayoutManager);
-            recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(adapter);
+            realm.addChangeListener(this);
+
+            //swipeRefreshLayout.setOnRefreshListener(this);
 
             FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
             fab.setOnClickListener(new OnClickListener() {
@@ -323,6 +347,20 @@ public class BookListActivity extends AppCompatActivity{
                 }
 
             });
+
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                }
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    checkLoadMore();
+                }
+            });
+
             return rootView;
         }
 
@@ -367,7 +405,7 @@ public class BookListActivity extends AppCompatActivity{
 
 
         public void changeBookRead(final String taskId) {
-            realm.executeTransactionAsync(new Realm.Transaction() {
+            realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
                     Book book = realm.where(Book.class).equalTo("id", taskId).findFirst();
@@ -378,17 +416,75 @@ public class BookListActivity extends AppCompatActivity{
 
 
         public void deleteTask(final String taskId) {
-            realm.executeTransactionAsync(new Realm.Transaction() {
+            realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                    realm.where(Book.class).equalTo("id", taskId)
-                            .findFirst()
-                            .deleteFromRealm();
+                    realm.where(Book.class).equalTo("id", taskId).findFirst().deleteFromRealm();
                 }
             });
         }
 
 
+        /**
+         * RealmChangeListener
+         */
+        private int itemCount;
+
+        @Override
+        public void onChange(Object o) {
+
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    if (itemCount < adapter.getItemCount())
+                        adapter.notifyItemRangeInserted(itemCount, adapter.getItemCount() - itemCount);
+                    else
+                        adapter.notifyItemRangeRemoved(itemCount, itemCount - adapter.getItemCount());
+
+                    itemCount = adapter.getItemCount();
+                }
+            });
+
+        }
+
+        /**
+         * Check whether to load more data or not
+         */
+        private static final int THRESHOLD = 3;
+
+        private void checkLoadMore() {
+//            if (!swipeRefreshLayout.isRefreshing() && adapter.getItemCount() <= layoutManager.findLastVisibleItemPosition() + THRESHOLD) {
+//                loadMoreData();
+//            }
+        }
+
+        private int page;
+
+        private void loadMoreData() {
+            swipeRefreshLayout.setRefreshing(true);
+//            BooksAPI.getFeed(page++, new BooksAPI.OnResponseListener<List<Book>>() {
+//                @Override
+//                public void onResponseRetrieved(List<Book> books, Exception e) {
+//                    swipeRefreshLayout.setRefreshing(false);
+//
+//                    realm.beginTransaction();
+//                    realm.copyToRealm(books);
+//                    realm.commitTransaction();
+//                }
+//            });
+        }
+
+//        @Override
+//        public void onRefresh() {
+//
+//            realm.beginTransaction();
+//            realm.delete(Book.class);
+//            realm.commitTransaction();
+//
+//            page = 0;
+//            loadMoreData();
+//
+//        }
     }
 
     /**

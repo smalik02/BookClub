@@ -21,13 +21,15 @@ import com.example.shehryarmalik.booklub.models.Book;
 
 import java.util.ArrayList;
 
+import io.realm.RealmResults;
+
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
 
     private BookListActivity activity;
     private BookListActivity.MyBooks activity2;
 
     private Context mContext;
-    private ArrayList<Book> bookList;
+    private RealmResults<Book> bookList;
 
     private CustomItemClickListener listener;
 
@@ -38,7 +40,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
         public TextView releaseYear;
         public TextView length;
         public CheckBox isRead;
-        private CardView card;
+
 
         public ViewHolder(View view) {
             super(view);
@@ -49,12 +51,20 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
             length = (TextView) view.findViewById(R.id.length);
             isRead = (CheckBox) view.findViewById(R.id.is_read);
 
-
         }
+
+        public void bind(final Book book, final CustomItemClickListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                    listener.onItemClick(book);
+                }
+            });
+        }
+
     }
 
-    BookAdapter(BookListActivity.MyBooks activity, ArrayList<Book> data, CustomItemClickListener listener) {
-        this.mContext = mContext;
+    BookAdapter(Context context, BookListActivity.MyBooks activity, RealmResults<Book> data, CustomItemClickListener listener) {
+        this.mContext = context;
         this.bookList = data;
         this.activity2 = activity;
         this.listener = listener;
@@ -64,14 +74,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.book_list, parent, false);
-
         final ViewHolder mViewHolder = new ViewHolder(itemView);
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onItemClick(v, mViewHolder.getPosition());
-            }
-        });
         return mViewHolder;
     }
 
@@ -89,6 +92,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
         holder.genre.setText(genre);
         holder.releaseYear.setText(year);
         holder.length.setText(length);
+        holder.bind(bookList.get(position), listener);
 
 //        // loading album cover using Glide library
 //        Glide.with(mContext).load(album.getThumbnail()).into(holder.thumbnail);

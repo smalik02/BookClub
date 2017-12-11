@@ -2,10 +2,12 @@ package com.example.shehryarmalik.booklub;
 
 import android.view.View;
 
+import com.example.shehryarmalik.booklub.models.Book;
+
 /**
  * Created by shehryarmalik on 11/15/17.
  */
     public interface CustomItemClickListener {
-        public void onItemClick(View v, final int position);
+        void onItemClick(Book book);
     }
 

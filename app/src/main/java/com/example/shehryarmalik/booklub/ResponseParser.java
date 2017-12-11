@@ -93,9 +93,9 @@ public class ResponseParser {
                         }
                     } else if (name2.equals("ASIN")) {
                         asin = readText(parser);
-                    } else if (name2.equals("SmallImage")){
+                    } else if (name2.equals("MediumImage")){
                         Log.e(TAG, "SMALL IMAGE FOUND");
-                        parser.require(XmlPullParser.START_TAG, ns, "SmallImage");
+                        parser.require(XmlPullParser.START_TAG, ns, "MediumImage");
                         while (parser.next() != XmlPullParser.END_TAG) {
                             if (parser.getEventType() != XmlPullParser.START_TAG) {
                                 continue;
