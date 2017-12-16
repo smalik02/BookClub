@@ -49,6 +49,37 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804400386283:android:9c38a663cb5d0677",
+        "android_client_info": {
+          "package_name": "com.shehryarmalik.booklub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "804400386283-s0bdq3sp2dm6443dtqm8st4clg7nbq4a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXnXyFqlIqlVKzLrguqyyND07QmPHlyhY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"
