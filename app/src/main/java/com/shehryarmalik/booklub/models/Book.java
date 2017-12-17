@@ -4,11 +4,15 @@ package com.shehryarmalik.booklub.models;
  * Created by shehryarmalik on 10/22/17.
  */
 
+import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
 
 public class Book extends RealmObject {
+
+    public static final String FIELD_ID = "id";
+
     @Required
     @PrimaryKey
     private String id;
@@ -76,5 +80,12 @@ public class Book extends RealmObject {
 
     public void setRelease_year(int release_year) {
         this.release_year = release_year;
+    }
+
+    public static void delete(Realm realm, String id){
+        Book book = realm.where(Book.class).equalTo(FIELD_ID, id).findFirst();
+        if (book != null) {
+            book.deleteFromRealm();
+        }
     }
 }

@@ -20,6 +20,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -109,11 +110,11 @@ public class BookListActivity extends AppCompatActivity{
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        realm.close();
-    }
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        realm.close();
+//    }
 
 //    @Override
 //    public void onTabChanged(String tabId) {
@@ -207,6 +208,7 @@ public class BookListActivity extends AppCompatActivity{
             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+
             RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
             itemAnimator.setAddDuration(ANIMATION_DURATION);
             itemAnimator.setRemoveDuration(ANIMATION_DURATION);
@@ -303,7 +305,7 @@ public class BookListActivity extends AppCompatActivity{
                     layout.addView(lengthBox);
                     //                    final EditText bookEditText = new EditText(MainActivity.this);
                     //                    bookEditText.setMinLines(5);
-                    AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.AlertDialogCustom))
+                    AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(rootView.getContext(), R.style.AlertDialogCustom))
                             .setTitle("Add Book")
                             .setView(layout)
                             .setPositiveButton("Add", new DialogInterface.OnClickListener() {
@@ -378,6 +380,18 @@ public class BookListActivity extends AppCompatActivity{
         public void onStart()
         {
             super.onStart();
+
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+        }
+        //
+        @Override
+        public void onResume() {
+            super.onResume();
+            onStart();
         }
 
 
@@ -409,10 +423,11 @@ public class BookListActivity extends AppCompatActivity{
 
 
         public void deleteTask(final String taskId) {
-            realm.executeTransaction(new Realm.Transaction() {
+            realm.executeTransactionAsync(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                    realm.where(Book.class).equalTo("id", taskId).findFirst().deleteFromRealm();
+//                    realm.where(Book.class).equalTo("id", taskId).findFirst().deleteFromRealm();
+                    Book.delete(realm, taskId);
                 }
             });
         }

@@ -61,6 +61,34 @@ public class BookRecs extends Fragment{
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        // Make sure that we are currently visible
+        if (this.isVisible()) {
+            // If we are becoming invisible, then...
+            if (!isVisibleToUser) {
+                Log.d("MyFragment", "Not visible anymore.");
+                // TODO stop audio playback
+            }
+            else {
+                onStart();
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+//
+    @Override
+    public void onResume() {
+        super.onResume();
+        onStart();
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 
@@ -97,6 +125,16 @@ public class BookRecs extends Fragment{
                 String service = "AWSECommerceService";
 
                 String region = "us-east-1";
+            } else {
+                WebView myWebView = (WebView) getView().findViewById(R.id.webView);
+                String content =
+                        "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"+
+                                "<html><head>"+
+                                "<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />"+
+                                "<head><strong> Book Recommendations </strong> </head> <body> <p> No Books in Your Reading History </p> </body>" +
+                                "</html>";
+
+                myWebView.loadData(content, "text/html", null);
             }
 //        }
     }

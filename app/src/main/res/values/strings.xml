@@ -91,6 +91,7 @@
 
     <string name="connection_error">Unable to load content. Check your network connection.</string>
     <string name="xml_error">Error parsing XML.</string>
+    <string name="add">Add</string>
 
 </resources>
 

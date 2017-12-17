@@ -14,16 +14,18 @@
     </style>
 
     <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:textColor">#bad6cc</item>
-        <item name="android:background">#000000</item>
+        <item name="android:textColor">#a93a3b</item>
+        <item name="android:background">#de13a8c9</item>
         <item name="android:typeface">monospace</item>
-        <item name="android:textColorHint">#1400a7</item>
-        <item name="android:textColorAlertDialogListItem">#1400a7</item>
+        <item name="android:textColorHint">#240eb1</item>
+        <item name="android:textColorAlertDialogListItem">#9e3032</item>
+        <item name="android:windowFullscreen">true</item>
         <item name="android:textSize">12sp</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">true</item>
+        <item name="android:textColorAlertDialogListItem">#a3383a</item>
+        <item name="windowActionBar">false</item>
         <item name="windowNoTitle">false</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
