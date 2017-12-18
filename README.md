@@ -1,4 +1,4 @@
-# BookClub
+# BooKlub
 
 ## App Description
 * A personalized book reading app that provides recommendation based upon user's reading behaviors
